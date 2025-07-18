@@ -1,0 +1,33 @@
+island-simulation/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── island/
+│   │   │           ├── model/
+│   │   │           │   ├── Island.java               # Основной класс острова
+│   │   │           │   ├── Location.java             # Класс локации (ячейки)                          ++++
+│   │   │           │   ├── entities/
+│   │   │           │   │   ├── Entity.java           # Абстрактный класс сущности                      ++++
+│   │   │           │   │   ├── animals/
+│   │   │           │   │   │   ├── Animal.java       # Абстрактный класс животных                      ++++
+│   │   │           │   │   │   ├── herbivores/       # Травоядные (олень, кролик и т.д.)
+│   │   │           │   │   │   └── predators/        # Хищники (волк, медведь и т.д.)
+│   │   │           │   │   └── plants/
+│   │   │           │   │       └── Plant.java        # Класс растений
+│   │   │           │   ├── behaviors/
+│   │   │           │   │   ├── Movable.java         # Интерфейс для передвижения
+│   │   │           │   │   ├── Eatable.java         # Интерфейс для питания
+│   │   │           │   │   ├── Reproducible.java     # Интерфейс для размножения
+│   │   │           │   │   └── Dieable.java         # Интерфейс для смерти
+│   │   │           │   ├── config/
+│   │   │           │   │   ├── EntityConfig.java     # Конфиг параметров сущностей
+│   │   │           │   │   └── IslandConfig.java     # Конфиг острова (размеры и т.д.)
+│   │   │           │   └── services/
+│   │   │           │       ├── SimulationEngine.java # Движок симуляции
+│   │   │           │       ├── LocationService.java  # Сервис работы с локациями
+│   │   │           │       └── EntityFactory.java    # Фабрика создания сущностей
+│   │   │           └── util/
+│   │   │               ├── Randomizer.java           # Утилиты рандомизации
+│   │   │               └── Validator.java            # Валидация параметров
