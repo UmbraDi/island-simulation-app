@@ -35,7 +35,9 @@ public abstract class Entity {
 
     public abstract void update();
 
+    //Может ли текущая сущность быть съеденной другой сущностью
     public abstract boolean isEdibleBy(Entity other);
 
+    //Получить вероятность быть съеденным
     public abstract int getEdibilityProbability();
 }
