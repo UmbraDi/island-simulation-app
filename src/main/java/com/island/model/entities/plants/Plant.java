@@ -4,12 +4,6 @@ import com.island.model.entities.Entity;
 import com.island.model.entities.animals.Herbivore;
 
 public class Plant extends Entity {
-    private final int maxPerLocation = 200;
-
-
-    @Override
-    public void update() {
-
-    }
+    private final double weight = 1.0;
 
 }
