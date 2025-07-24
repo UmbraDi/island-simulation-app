@@ -4,24 +4,11 @@ import com.island.model.locations.Location;
 
 public abstract class Entity {
     protected Location location;
-    protected final double weight;
-    protected static int maxPerLocation;
-    protected boolean isAlive = true;
 
-    protected Entity(double weight) {
-        this.weight = weight;
-    }
+    protected boolean isAlive = true;
 
     public Location getLocation() {
         return location;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public static int getMaxPerLocation() {
-        return maxPerLocation;
     }
 
     public boolean isAlive() {
@@ -35,9 +22,4 @@ public abstract class Entity {
 
     public abstract void update();
 
-    //Может ли текущая сущность быть съеденной другой сущностью
-    public abstract boolean isEdibleBy(Entity other);
-
-    //Получить вероятность быть съеденным
-    public abstract int getEdibilityProbability();
 }
