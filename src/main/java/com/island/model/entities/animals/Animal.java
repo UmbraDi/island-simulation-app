@@ -2,6 +2,7 @@ package com.island.model.entities.animals;
 
 import com.island.model.config.AnimalConfig;
 import com.island.model.entities.Entity;
+import com.island.model.locations.Location;
 
 public abstract class Animal extends Entity {
 

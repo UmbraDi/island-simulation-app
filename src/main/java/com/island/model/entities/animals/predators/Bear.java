@@ -1,4 +1,11 @@
 package com.island.model.entities.animals.predators;
 
-public class Bear {
+import com.island.model.config.AnimalConfig;
+import com.island.model.entities.animals.Predator;
+
+public class Bear extends Predator {
+
+    public Bear() {
+        super(AnimalConfig.BEAR);
+    }
 }
