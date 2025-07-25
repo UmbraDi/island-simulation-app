@@ -1,6 +1,5 @@
 package com.island.model.locations;
 
-import com.island.model.entities.*;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.plants.Plant;
 
@@ -43,8 +42,15 @@ public abstract class Location {
         }
     }
 
-    public Plant consumePlant() {
-        return plants.poll();
+    public double eatPlants(int amount) {
+        if (amount <= 0 || plants.isEmpty()) return 0;
+        double totalEaten = 0;
+        while (totalEaten < amount && !plants.isEmpty()) {
+            Plant plant = plants.poll();
+            totalEaten += plant.weight;
+        }
+
+        return totalEaten;
     }
 
     public BlockingQueue<Plant> getPlants() {
@@ -59,5 +65,9 @@ public abstract class Location {
     public boolean removeAnimal(Animal animal) {
         Set<Animal> set = animals.get(animal.getClass());
         return set != null && set.remove(animal);
+    }
+
+    public ConcurrentHashMap<Class<? extends Animal>, Set<Animal>> getAnimals() {
+        return animals;
     }
 }

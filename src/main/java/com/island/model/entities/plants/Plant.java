@@ -4,6 +4,6 @@ import com.island.model.entities.Entity;
 import com.island.model.entities.animals.Herbivore;
 
 public class Plant extends Entity {
-    private final double weight = 1.0;
+    public final double weight = 1.0;
 
 }
