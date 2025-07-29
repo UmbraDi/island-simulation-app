@@ -9,16 +9,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class Location {
+public class Location {
     private final int x, y;
     private final TerrainType terrain;
     private final ConcurrentHashMap<Class<? extends Animal>, Set<Animal>> animals = new ConcurrentHashMap<>();
     private final BlockingQueue<Plant> plants = new LinkedBlockingQueue<>(200);
 
-    public Location(int x, int y, TerrainType terrain) {
+    public Location(int x, int y) {
         this.x = x;
         this.y = y;
-        this.terrain = terrain;
+        this.terrain = (ThreadLocalRandom.current().nextDouble() > 0.7) ? TerrainType.FOREST : TerrainType.FIELD;
         initializePlants();
     }
 

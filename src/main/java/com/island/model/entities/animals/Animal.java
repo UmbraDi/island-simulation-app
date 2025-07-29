@@ -5,11 +5,16 @@ import com.island.model.entities.Entity;
 import com.island.model.locations.Location;
 
 public abstract class Animal extends Entity {
+    protected Location location;
 
     protected final AnimalConfig config;
 
     public Animal(AnimalConfig config) {
         this.config = config;
+    }
+
+    public int getMaxSpeed() {
+        return config.maxSpeed;
     }
 
     public void eat() {
@@ -24,15 +29,6 @@ public abstract class Animal extends Entity {
 
     };
 
-    @Override
-    public void update() {
-
-    }
-
-    //    //Возможность размножения
-//    public boolean canReproduceWith(Animal other) {
-//        return this.gender != other.gender && this.getClass() == other.getClass();
-//    }
 
 
 }
