@@ -72,10 +72,52 @@ public enum AnimalConfig {
         this.gender = Gender.getRandomGender();
     }
 
+    public Animal createAnimal() {
+        return factory.get();
+    }
+
+    public int getStartingValue() {
+        return switch (this) {
+            case WOLF -> StartingValue.WOLF;
+            case BOA -> StartingValue.BOA;
+            case FOX -> StartingValue.FOX;
+            case BEAR -> StartingValue.BEAR;
+            case EAGLE -> StartingValue.EAGLE;
+            case HORSE -> StartingValue.HORSE;
+            case DEER -> StartingValue.DEER;
+            case RABBIT -> StartingValue.RABBIT;
+            case MOUSE -> StartingValue.MOUSE;
+            case GOAT -> StartingValue.GOAT;
+            case SHEEP -> StartingValue.SHEEP;
+            case BOAR -> StartingValue.BOAR;
+            case BUFFALO -> StartingValue.BUFFALO;
+            case DUCK -> StartingValue.DUCK;
+            case CATERPILLAR -> StartingValue.CATERPILLAR;
+        };
+    }
+
+    public static final class StartingValue {
+        public static final int WOLF = 30;
+        public static final int BOA = 20;
+        public static final int FOX = 30;
+        public static final int BEAR = 5;
+        public static final int EAGLE = 15;
+        public static final int HORSE = 20;
+        public static final int DEER = 20;
+        public static final int RABBIT = 100;
+        public static final int MOUSE = 300;
+        public static final int GOAT = 100;
+        public static final int SHEEP = 100;
+        public static final int BOAR = 40;
+        public static final int BUFFALO = 10;
+        public static final int DUCK = 150;
+        public static final int CATERPILLAR = 500;
+    }
+
     public static final class EatingChance {
         // ========= ВОЛК =========
-        public static final int WOLF_RABBIT = 60; // 60% шанс съесть кролика
-        public static final int WOLF_MOUSE = 80;  // 80% шанс съесть мышь
+        public static final int WOLF_RABBIT = 60;
+        public static final int WOLF_MOUSE = 80;
         public static final int WOLF_GOAT = 60;
         public static final int WOLF_SHEEP = 70;
         public static final int WOLF_HORSE = 10;

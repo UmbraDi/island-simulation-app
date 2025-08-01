@@ -1,5 +1,6 @@
 package com.island.model.locations;
 
+import com.island.model.entities.Entity;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.plants.Plant;
 
@@ -14,6 +15,14 @@ public class Location {
     private final TerrainType terrain;
     private final ConcurrentHashMap<Class<? extends Animal>, Set<Animal>> animals = new ConcurrentHashMap<>();
     private final BlockingQueue<Plant> plants = new LinkedBlockingQueue<>(200);
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
 
     public Location(int x, int y) {
         this.x = x;
@@ -69,5 +78,13 @@ public class Location {
 
     public ConcurrentHashMap<Class<? extends Animal>, Set<Animal>> getAnimals() {
         return animals;
+    }
+
+    public boolean hasAnimalType(Class<? extends Animal> animalType) {
+        return animals.entrySet().stream().anyMatch(animalType::isInstance);
+    }
+
+    public boolean hasPlant() {
+        return !plants.isEmpty();
     }
 }

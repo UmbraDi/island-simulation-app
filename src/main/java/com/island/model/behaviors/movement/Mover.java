@@ -2,6 +2,8 @@ package com.island.model.behaviors.movement;
 
 import com.island.model.entities.animals.Animal;
 import com.island.model.locations.Location;
+
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Mover {
@@ -9,6 +11,6 @@ public class Mover {
 
     public void move(Animal animal, Location currentLoc) {
         int maxStep = animal.getMaxSpeed();
-
+        List<Location> neighbors;
     }
 }
