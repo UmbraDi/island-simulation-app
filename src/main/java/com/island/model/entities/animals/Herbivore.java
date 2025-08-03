@@ -1,8 +1,8 @@
 package com.island.model.entities.animals;
 
 import com.island.model.config.AnimalConfig;
+import com.island.model.locations.Location;
 
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Herbivore extends Animal {
 
@@ -20,5 +20,17 @@ public abstract class Herbivore extends Animal {
         } else {
             return 0.7;
         }
+    }
+
+    @Override
+    public void eat() {
+        eatPlants(currentLocation);
+    }
+
+    protected boolean eatPlants(Location location) {
+        double foodNeeded = config.satietyLimit - currentSatiety;
+        double eaten = location.eatPlants(foodNeeded);
+        currentSatiety += eaten;
+        return eaten > 0;
     }
 }

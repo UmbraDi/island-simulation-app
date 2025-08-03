@@ -3,7 +3,7 @@ package com.island.model.config;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.animals.herbivores.*;
 import com.island.model.entities.animals.predators.*;
-
+import java.util.Map;
 import java.util.function.Supplier;
 
 public enum AnimalConfig {
@@ -114,7 +114,7 @@ public enum AnimalConfig {
         public static final int CATERPILLAR = 500;
     }
 
-    public static final class EatingChance {
+    public static final class EatingProfile {
         // ========= ВОЛК =========
         public static final int WOLF_RABBIT = 60;
         public static final int WOLF_MOUSE = 80;
@@ -125,18 +125,38 @@ public enum AnimalConfig {
         public static final int WOLF_BOAR = 15;
         public static final int WOLF_BUFFALO = 10;
         public static final int WOLF_DUCK = 40;
+        public static final Map<Class<? extends Animal>, Integer> WOLF_DIET =
+                Map.of(Rabbit.class, WOLF_RABBIT,
+                        Mouse.class, WOLF_MOUSE,
+                        Goat.class, WOLF_GOAT,
+                        Sheep.class, WOLF_SHEEP,
+                        Horse.class, WOLF_HORSE,
+                        Deer.class, WOLF_DEER,
+                        Boar.class, WOLF_BOAR,
+                        Buffalo.class,WOLF_BUFFALO,
+                        Duck.class, WOLF_DUCK);
 
         // ========= УДАВ =========
         public static final int BOA_FOX = 15;
         public static final int BOA_RABBIT = 20;
         public static final int BOA_MOUSE = 40;
         public static final int BOA_DUCK = 10;
+        public static final Map<Class<? extends Animal>, Integer> BOA_DIET =
+                Map.of(Rabbit.class, BOA_RABBIT,
+                        Mouse.class, BOA_MOUSE,
+                        Fox.class, BOA_FOX,
+                        Duck.class, BOA_DUCK);
 
         // ========= ЛИСА =========
         public static final int FOX_RABBIT = 70;
         public static final int FOX_MOUSE = 90;
         public static final int FOX_DUCK = 60;
         public static final int FOX_CATERPILLAR = 40;
+        public static final Map<Class<? extends Animal>, Integer> FOX_DIET =
+                Map.of(Rabbit.class, FOX_RABBIT,
+                        Mouse.class, FOX_MOUSE,
+                        Caterpillar.class, FOX_CATERPILLAR,
+                        Duck.class, FOX_DUCK);
 
         // ========= МЕДВЕДЬ =========
         public static final int BEAR_BOA = 80;
@@ -148,12 +168,27 @@ public enum AnimalConfig {
         public static final int BEAR_SHEEP = 70;
         public static final int BEAR_BOAR = 50;
         public static final int BEAR_DUCK = 10;
+        public static final Map<Class<? extends Animal>, Integer> BEAR_DIET =
+                Map.of(Rabbit.class, BEAR_RABBIT,
+                        Mouse.class, BEAR_MOUSE,
+                        Goat.class, BEAR_GOAT,
+                        Sheep.class, BEAR_SHEEP,
+                        Horse.class, BEAR_HORSE,
+                        Deer.class, BEAR_DEER,
+                        Boar.class, BEAR_BOAR,
+                        Boa.class, BEAR_BOA,
+                        Duck.class, BEAR_DUCK);
 
         // ========= ОРЕЛ =========
         public static final int EAGLE_FOX = 10;
         public static final int EAGLE_RABBIT = 90;
         public static final int EAGLE_MOUSE = 90;
         public static final int EAGLE_DUCK = 80;
+        public static final Map<Class<? extends Animal>, Integer> EAGLE_DIET =
+                Map.of(Rabbit.class, EAGLE_RABBIT,
+                        Mouse.class, EAGLE_MOUSE,
+                        Fox.class, EAGLE_FOX,
+                        Duck.class, EAGLE_DUCK);
 
         // ========= ОСОБЫЕ СЛУЧАИ =========
         public static final int MOUSE_CATERPILLAR = 90;  // Мышь ест гусеницу

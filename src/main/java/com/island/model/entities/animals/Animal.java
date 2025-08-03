@@ -5,13 +5,20 @@ import com.island.model.config.AnimalConfig;
 import com.island.model.entities.Entity;
 import com.island.model.locations.Location;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public abstract class Animal extends Entity {
     protected Location currentLocation;
-    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
+    protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
     protected final AnimalConfig config;
+    protected double currentSatiety;
+    protected Map<Class<? extends Animal>, Integer> diet;
+
 
     public Animal(AnimalConfig config) {
         this.config = config;
@@ -21,9 +28,11 @@ public abstract class Animal extends Entity {
         return config.maxSpeed;
     }
 
-    public void eat() {
+    public static boolean getProbability(double percent) {
+        return random.nextDouble(100) < percent;
+    }
 
-    };
+    public abstract void eat();
 
     public boolean move() {
         Island island = Island.getIsland();
@@ -36,14 +45,14 @@ public abstract class Animal extends Entity {
     private boolean performMove(Location target) {
         currentLocation.removeAnimal(this);
         target.addAnimal(this);
-        this.currentLocation = target;
+        currentLocation = target;
         return true;
     }
 
     private void movement(int steps) {
         if (steps <= 0) return;
         if (random.nextDouble() < calculateMoveProbability()) {
-            this.move();
+            move();
             movement(steps - 1);
         }
 
@@ -57,8 +66,39 @@ public abstract class Animal extends Entity {
     protected abstract double calculateMoveProbability();
 
     public void reproduce() {
-
+        if (getPartner() != null && getProbability(config.reproductionChance)) {
+            Animal offspring = createOffspring();
+            currentLocation.addAnimal(offspring);
+        }
     };
+
+    protected abstract Animal createOffspring();
+
+    public Animal getPartner() {
+        Set<Animal> possiblePartners = currentLocation.getAnimals().get(this.getClass()).stream()
+                .filter(animal -> config.gender != animal.config.gender)
+                .collect(Collectors.toSet());
+        synchronized (possiblePartners) {
+            if (possiblePartners.isEmpty()) return null;
+            int randomIndex = random.nextInt(possiblePartners.size());
+            Iterator<Animal> iterator = possiblePartners.iterator();
+            for (int i = 0; i < randomIndex; i++) {
+                iterator.next();
+            }
+            return iterator.next();
+        }
+
+
+    }
+
+    public void die() {
+        if (isAlive) {
+            isAlive = false;
+            if (currentLocation != null) {
+                currentLocation.removeAnimal(this);
+            }
+        }
+    }
 
 
 

@@ -51,7 +51,7 @@ public class Location {
         }
     }
 
-    public double eatPlants(int amount) {
+    public double eatPlants(double amount) {
         if (amount <= 0 || plants.isEmpty()) return 0;
         double totalEaten = 0;
         while (totalEaten < amount && !plants.isEmpty()) {
@@ -87,4 +87,6 @@ public class Location {
     public boolean hasPlant() {
         return !plants.isEmpty();
     }
+
+
 }
