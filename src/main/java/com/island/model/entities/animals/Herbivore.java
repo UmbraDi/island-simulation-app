@@ -25,6 +25,7 @@ public abstract class Herbivore extends Animal {
     @Override
     public void eat() {
         eatPlants(currentLocation);
+        System.out.println("Травка покушана");
     }
 
     protected boolean eatPlants(Location location) {

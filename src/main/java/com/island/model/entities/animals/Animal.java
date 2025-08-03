@@ -5,6 +5,8 @@ import com.island.model.config.AnimalConfig;
 import com.island.model.config.SimulationConfig;
 import com.island.model.entities.Entity;
 import com.island.model.locations.Location;
+import com.island.model.services.Simulation;
+import com.island.util.StatisticsManager;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,10 +21,15 @@ public abstract class Animal extends Entity {
     public final AnimalConfig config;
     protected double currentSatiety;
     protected Map<Class<? extends Animal>, Integer> diet;
+    protected static Simulation simulation;
 
 
     public Animal(AnimalConfig config) {
         this.config = config;
+    }
+
+    public static void setSimulation(Simulation simulation) {
+        Animal.simulation = simulation;
     }
 
     public int getMaxSpeed() {
@@ -79,6 +86,7 @@ public abstract class Animal extends Entity {
         if (getPartner() != null && getProbability(config.reproductionChance)) {
             Animal offspring = createOffspring();
             currentLocation.addAnimal(offspring);
+            simulation.recordBirth(offspring);
             decreaseSatiety();
             decreaseSatiety();
         }
@@ -109,6 +117,8 @@ public abstract class Animal extends Entity {
             if (currentLocation != null) {
                 currentLocation.removeAnimal(this);
             }
+            System.out.println(this.getClass().toString() + ": померло");
+            simulation.recordDeath(this);
         }
     }
 

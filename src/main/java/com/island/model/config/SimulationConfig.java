@@ -21,5 +21,5 @@ public class SimulationConfig {
 
     public static final double DAILY_SATIETY_LOSS = 0.3;
 
-    public static final double SATIETY_LOSS_PER_ACTION = 0.1;
+    public static final double SATIETY_LOSS_PER_ACTION = 0.3;
 }

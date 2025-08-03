@@ -4,13 +4,19 @@ import com.island.model.Island;
 import com.island.model.config.SimulationConfig;
 import com.island.model.entities.animals.Animal;
 import com.island.model.locations.Location;
+import com.island.util.StatisticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Simulation {
+    private final StatisticsManager statsManager;
+
     private final Island island;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
@@ -23,9 +29,51 @@ public class Simulation {
 
     private final AtomicInteger monthCounter = new AtomicInteger(0);
 
+    private final Map<Class<? extends Animal>, Long> birthRecords = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Animal>, Long> deathRecords = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Animal>, Long> previousPopulationStats = new ConcurrentHashMap<>();
+
+    public Map<Class<? extends Animal>, Long> getPreviousPopulationStats() {
+        return previousPopulationStats;
+    }
+
     public Simulation(Island island) {
         this.island = island;
+        this.statsManager = new StatisticsManager(this);
     }
+
+
+    public void recordBirth(Animal animal) {
+        birthRecords.merge(animal.getClass(), 1L, Long::sum);
+    }
+
+    public void recordDeath(Animal animal) {
+        deathRecords.merge(animal.getClass(), 1L, Long::sum);
+    }
+
+    public void updatePopulationStats() {
+        previousPopulationStats.clear();
+        previousPopulationStats.putAll(getCurrentPopulationStats());
+        birthRecords.clear();
+        deathRecords.clear();
+    }
+
+    public Island getIsland() {
+        return island;
+    }
+
+    private Map<Class<? extends Animal>, Long> getCurrentPopulationStats() {
+        return island.getAllAnimals().stream()
+                .collect(Collectors.groupingBy(
+                        Animal::getClass,
+                        Collectors.counting()
+                ));
+    }
+
+    // Геттеры
+    public Map<Class<? extends Animal>, Long> getBirthRecords() { return birthRecords; }
+    public Map<Class<? extends Animal>, Long> getDeathRecords() { return deathRecords; }
+    public Set<Class<? extends Animal>> getAnimalClasses() { return birthRecords.keySet(); }
 
     public void startSimulation() {
         if (isRunning) return;
@@ -71,6 +119,9 @@ public class Simulation {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+
+        updatePopulationStats();
+        statsManager.printStatistics(currentDay);
     }
 
     public void stopSimulation() {

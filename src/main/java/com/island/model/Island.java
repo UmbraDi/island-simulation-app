@@ -1,10 +1,14 @@
 package com.island.model;
 
 import com.island.model.config.AnimalConfig;
+import com.island.model.entities.animals.Animal;
+import com.island.model.entities.plants.Plant;
 import com.island.model.locations.Location;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,6 +25,10 @@ public class Island {
         this.locations = new Location[width][height];
         createLocations();
         spawnAnimals();
+    }
+
+    public int getIslandSize() {
+        return width * height;
     }
 
     public static synchronized Island getIsland() {
@@ -71,6 +79,21 @@ public class Island {
                 getLocation(location.getX(), location.getY() + 1),
                 getLocation(location.getX() - 1, location.getY())
         ).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public List<Animal> getAllAnimals() {
+        return Arrays.stream(locations)
+                .flatMap(Arrays::stream) // Преобразуем в поток локаций
+                .flatMap(location -> location.getAnimals().values().stream())
+                .flatMap(Set::stream) // Двойной flatMap для ConcurrentHashMap<Class, Set>
+                .collect(Collectors.toList());
+    }
+
+    public List<Plant> getAllPlants() {
+        return Arrays.stream(locations)
+                .flatMap(Arrays::stream)
+                .flatMap(location -> location.getPlants().stream())
+                .collect(Collectors.toList());
     }
 
 

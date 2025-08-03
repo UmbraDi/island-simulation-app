@@ -53,6 +53,7 @@ public abstract class Predator extends Animal {
             double nutrition = Math.min(prey.config.weight, config.satietyLimit - currentSatiety);
             currentSatiety += nutrition;
             prey.die();
+            System.out.println("Животное съедено");
         }
 
     }
