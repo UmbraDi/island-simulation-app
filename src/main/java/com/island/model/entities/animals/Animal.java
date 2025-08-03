@@ -2,6 +2,7 @@ package com.island.model.entities.animals;
 
 import com.island.model.Island;
 import com.island.model.config.AnimalConfig;
+import com.island.model.config.SimulationConfig;
 import com.island.model.entities.Entity;
 import com.island.model.locations.Location;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public abstract class Animal extends Entity {
     protected Location currentLocation;
     protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
-    protected final AnimalConfig config;
+    public final AnimalConfig config;
     protected double currentSatiety;
     protected Map<Class<? extends Animal>, Integer> diet;
 
@@ -28,13 +29,18 @@ public abstract class Animal extends Entity {
         return config.maxSpeed;
     }
 
-    public static boolean getProbability(double percent) {
+    protected void decreaseSatiety() {
+        currentSatiety -= SimulationConfig.SATIETY_LOSS_PER_ACTION;
+    }
+
+    protected static boolean getProbability(double percent) {
         return random.nextDouble(100) < percent;
     }
 
     public abstract void eat();
 
-    public boolean move() {
+    protected boolean move() {
+        decreaseSatiety();
         Island island = Island.getIsland();
         List<Location> neighbors = island.getNeighbors(currentLocation);
         if (neighbors.isEmpty()) return false;
@@ -65,16 +71,22 @@ public abstract class Animal extends Entity {
 
     protected abstract double calculateMoveProbability();
 
+    public double getCurrentSatiety() {
+        return currentSatiety;
+    }
+
     public void reproduce() {
         if (getPartner() != null && getProbability(config.reproductionChance)) {
             Animal offspring = createOffspring();
             currentLocation.addAnimal(offspring);
+            decreaseSatiety();
+            decreaseSatiety();
         }
     };
 
     protected abstract Animal createOffspring();
 
-    public Animal getPartner() {
+    protected Animal getPartner() {
         Set<Animal> possiblePartners = currentLocation.getAnimals().get(this.getClass()).stream()
                 .filter(animal -> config.gender != animal.config.gender)
                 .collect(Collectors.toSet());

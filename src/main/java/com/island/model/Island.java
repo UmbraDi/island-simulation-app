@@ -15,7 +15,7 @@ public class Island {
     private final Location[][] locations;
     private static Island island;
 
-    private Island() {
+    public Island() {
         this.width = 100;
         this.height = 100;
         this.locations = new Location[width][height];
@@ -36,6 +36,10 @@ public class Island {
                 locations[x][y] = new Location(x, y);
             }
         }
+    }
+
+    public Location[][] getLocations() {
+        return locations;
     }
 
     private void spawnAnimals() {

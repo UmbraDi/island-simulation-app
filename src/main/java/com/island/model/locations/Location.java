@@ -4,11 +4,14 @@ import com.island.model.entities.Entity;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.plants.Plant;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class Location {
     private final int x, y;
@@ -78,6 +81,13 @@ public class Location {
 
     public ConcurrentHashMap<Class<? extends Animal>, Set<Animal>> getAnimals() {
         return animals;
+    }
+
+    public List<Animal> getAnimalsList() {
+        // Преобразуем все очереди животных в одно общее множество и возвращаем в виде списка
+        return animals.values().stream() // Получаем все очереди животных
+                .flatMap(Collection::stream) // Объединяем все очереди в один поток объектов Animal
+                .collect(Collectors.toList()); // Собираем поток в список и возвращаем
     }
 
     public boolean hasAnimalType(Class<? extends Animal> animalType) {
