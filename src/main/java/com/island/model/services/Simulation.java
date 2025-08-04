@@ -85,6 +85,7 @@ public class Simulation {
     }
 
     private void processDay() {
+        //System.out.println("[DEBUG] Processing day... Animals count: " + island.getAllAnimals().size());
         int currentDay = dayCounter.incrementAndGet();
         int totalPlants = 0;
         for (Location[] row : island.getLocations()) {
@@ -94,6 +95,18 @@ public class Simulation {
             }
         }
 
+        List<Callable<Void>> tasks = getCallables();
+        try {
+            animalExecutor.invokeAll(tasks);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        updatePopulationStats();
+        statsManager.printStatistics(currentDay);
+    }
+
+    private List<Callable<Void>> getCallables() {
         List<Callable<Void>> tasks = new ArrayList<>();
         for (Location[] row : island.getLocations()) {
             for (Location location : row) {
@@ -106,6 +119,10 @@ public class Simulation {
                                 animal.eat();
                             }
                             animal.reproduce();
+                            animal.decreaseSatiety();
+                            if (animal.getCurrentSatiety() <= 0) {
+                                animal.die();
+                            }
 
 
                         }
@@ -114,14 +131,7 @@ public class Simulation {
                 }
             }
         }
-        try {
-            animalExecutor.invokeAll(tasks);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        updatePopulationStats();
-        statsManager.printStatistics(currentDay);
+        return tasks;
     }
 
     public void stopSimulation() {

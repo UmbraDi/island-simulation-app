@@ -11,8 +11,8 @@ public abstract class Herbivore extends Animal {
     }
 
     public double calculateMoveProbability() {
-        boolean hasPredator = this.currentLocation.hasAnimalType(Predator.class);
-        boolean hasFood = this.currentLocation.hasPlant();
+        boolean hasPredator = this.location.hasAnimalType(Predator.class);
+        boolean hasFood = this.location.hasPlant();
         if (hasPredator) {
             return 0.9;
         } else if (hasFood) {
@@ -24,8 +24,7 @@ public abstract class Herbivore extends Animal {
 
     @Override
     public void eat() {
-        eatPlants(currentLocation);
-        System.out.println("Травка покушана");
+        eatPlants(location);
     }
 
     protected boolean eatPlants(Location location) {

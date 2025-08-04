@@ -3,6 +3,8 @@ package com.island.model.config;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.animals.herbivores.*;
 import com.island.model.entities.animals.predators.*;
+import com.island.model.locations.Location;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -97,21 +99,21 @@ public enum AnimalConfig {
     }
 
     public static final class StartingValue {
-        public static final int WOLF = 30;
-        public static final int BOA = 20;
-        public static final int FOX = 30;
-        public static final int BEAR = 5;
-        public static final int EAGLE = 15;
-        public static final int HORSE = 20;
-        public static final int DEER = 20;
-        public static final int RABBIT = 100;
-        public static final int MOUSE = 300;
-        public static final int GOAT = 100;
-        public static final int SHEEP = 100;
-        public static final int BOAR = 40;
-        public static final int BUFFALO = 10;
-        public static final int DUCK = 150;
-        public static final int CATERPILLAR = 500;
+        public static final int WOLF = 300;
+        public static final int BOA = 200;
+        public static final int FOX = 300;
+        public static final int BEAR = 50;
+        public static final int EAGLE = 1500;
+        public static final int HORSE = 200;
+        public static final int DEER = 200;
+        public static final int RABBIT = 1000;
+        public static final int MOUSE = 3000;
+        public static final int GOAT = 1000;
+        public static final int SHEEP = 1000;
+        public static final int BOAR = 400;
+        public static final int BUFFALO = 100;
+        public static final int DUCK = 1500;
+        public static final int CATERPILLAR = 5000;
     }
 
     public static final class EatingProfile {

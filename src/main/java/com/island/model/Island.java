@@ -1,6 +1,7 @@
 package com.island.model;
 
 import com.island.model.config.AnimalConfig;
+import com.island.model.config.SimulationConfig;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.plants.Plant;
 import com.island.model.locations.Location;
@@ -17,11 +18,10 @@ public class Island {
     private final int width;
     private final int height;
     private final Location[][] locations;
-    private static Island island;
 
     public Island() {
-        this.width = 100;
-        this.height = 100;
+        this.width = SimulationConfig.ISLAND_WIDTH;
+        this.height = SimulationConfig.ISLAND_HEIGHT;
         this.locations = new Location[width][height];
         createLocations();
         spawnAnimals();
@@ -31,12 +31,12 @@ public class Island {
         return width * height;
     }
 
-    public static synchronized Island getIsland() {
-        if (island == null) {
-            island = new Island();
-        }
-        return island;
-    }
+//    public static synchronized Island getIsland() {
+//        if (island == null) {
+//            island = new Island();
+//        }
+//        return island;
+//    }
 
     private void createLocations() {
         for (int x = 0; x < width; x++) {
@@ -44,6 +44,7 @@ public class Island {
                 locations[x][y] = new Location(x, y);
             }
         }
+        System.out.println("Остров построен.");
     }
 
     public Location[][] getLocations() {
@@ -54,9 +55,12 @@ public class Island {
         for (AnimalConfig config: AnimalConfig.values()) {
             for (int i = 0; i < config.getStartingValue(); i++) {
                 Location location = getRandomLocation();
-                location.addAnimal(config.createAnimal());
+                Animal animal = config.createAnimal();
+                animal.setLocation(location);
+                location.addAnimal(animal);
             }
         }
+        System.out.println("Остров заселен");
     }
 
     public Location getRandomLocation() {

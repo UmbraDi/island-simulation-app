@@ -5,11 +5,11 @@ public class SimulationConfig {
     private SimulationConfig() {
     }
 
-    public static final int ISLAND_WIDTH = 100;
+    public static final int ISLAND_WIDTH = 10;
 
-    public static final int ISLAND_HEIGHT = 100;
+    public static final int ISLAND_HEIGHT = 10;
 
-    public static final int DAY_DURATION_MS = 1000;
+    public static final int DAY_DURATION_MS = 100;
 
     public static final int STATISTICS_PRINT_INTERVAL_DAYS = 30;
 

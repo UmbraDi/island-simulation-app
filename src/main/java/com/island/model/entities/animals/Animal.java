@@ -1,13 +1,10 @@
 package com.island.model.entities.animals;
 
-import com.island.model.Island;
 import com.island.model.config.AnimalConfig;
 import com.island.model.config.SimulationConfig;
 import com.island.model.entities.Entity;
 import com.island.model.locations.Location;
 import com.island.model.services.Simulation;
-import com.island.util.StatisticsManager;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public abstract class Animal extends Entity {
-    protected Location currentLocation;
+    //public Island island;
+    protected Location location;
     protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
     public final AnimalConfig config;
     protected double currentSatiety;
@@ -24,9 +22,16 @@ public abstract class Animal extends Entity {
     protected static Simulation simulation;
 
 
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     public Animal(AnimalConfig config) {
         this.config = config;
+        this.currentSatiety = config.satietyLimit;
     }
+
+
 
     public static void setSimulation(Simulation simulation) {
         Animal.simulation = simulation;
@@ -36,7 +41,7 @@ public abstract class Animal extends Entity {
         return config.maxSpeed;
     }
 
-    protected void decreaseSatiety() {
+    public void decreaseSatiety() {
         currentSatiety -= SimulationConfig.SATIETY_LOSS_PER_ACTION;
     }
 
@@ -46,25 +51,27 @@ public abstract class Animal extends Entity {
 
     public abstract void eat();
 
-    protected boolean move() {
-        decreaseSatiety();
-        Island island = Island.getIsland();
-        List<Location> neighbors = island.getNeighbors(currentLocation);
+    public Location getLocation() {
+        return location;
+    }
+
+    public boolean move() {
+        List<Location> neighbors = simulation.getIsland().getNeighbors(location);
         if (neighbors.isEmpty()) return false;
         Location target = neighbors.get(ThreadLocalRandom.current().nextInt(neighbors.size()));
         return performMove(target);
     };
 
     private boolean performMove(Location target) {
-        currentLocation.removeAnimal(this);
+        location.removeAnimal(this);
         target.addAnimal(this);
-        currentLocation = target;
+        location = target;
         return true;
     }
 
     private void movement(int steps) {
         if (steps <= 0) return;
-        if (random.nextDouble() < calculateMoveProbability()) {
+        if (random.nextDouble(1) < calculateMoveProbability()) {
             move();
             movement(steps - 1);
         }
@@ -85,7 +92,8 @@ public abstract class Animal extends Entity {
     public void reproduce() {
         if (getPartner() != null && getProbability(config.reproductionChance)) {
             Animal offspring = createOffspring();
-            currentLocation.addAnimal(offspring);
+            System.out.println("Создание потомка");
+            location.addAnimal(offspring);
             simulation.recordBirth(offspring);
             decreaseSatiety();
             decreaseSatiety();
@@ -95,10 +103,9 @@ public abstract class Animal extends Entity {
     protected abstract Animal createOffspring();
 
     protected Animal getPartner() {
-        Set<Animal> possiblePartners = currentLocation.getAnimals().get(this.getClass()).stream()
+        Set<Animal> possiblePartners = location.getAnimals().get(this.getClass()).stream()
                 .filter(animal -> config.gender != animal.config.gender)
                 .collect(Collectors.toSet());
-        synchronized (possiblePartners) {
             if (possiblePartners.isEmpty()) return null;
             int randomIndex = random.nextInt(possiblePartners.size());
             Iterator<Animal> iterator = possiblePartners.iterator();
@@ -106,18 +113,14 @@ public abstract class Animal extends Entity {
                 iterator.next();
             }
             return iterator.next();
-        }
-
-
     }
 
     public void die() {
         if (isAlive) {
             isAlive = false;
-            if (currentLocation != null) {
-                currentLocation.removeAnimal(this);
+            if (location != null) {
+                location.removeAnimal(this);
             }
-            System.out.println(this.getClass().toString() + ": померло");
             simulation.recordDeath(this);
         }
     }

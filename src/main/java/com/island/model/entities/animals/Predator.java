@@ -23,11 +23,11 @@ public abstract class Predator extends Animal {
     }
 
     protected boolean hasPrey(){
-        return this.currentLocation.getAnimals().keySet().stream().anyMatch(diet::containsKey);
+        return this.location.getAnimals().keySet().stream().anyMatch(diet::containsKey);
     };
 
     protected Map<Class<? extends Animal>, Set<Animal>> getPreys() {
-        return currentLocation.getAnimals().entrySet().stream()
+        return location.getAnimals().entrySet().stream()
                 .filter(entry -> diet.containsKey(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
@@ -53,7 +53,6 @@ public abstract class Predator extends Animal {
             double nutrition = Math.min(prey.config.weight, config.satietyLimit - currentSatiety);
             currentSatiety += nutrition;
             prey.die();
-            System.out.println("Животное съедено");
         }
 
     }

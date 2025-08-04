@@ -84,10 +84,9 @@ public class Location {
     }
 
     public List<Animal> getAnimalsList() {
-        // Преобразуем все очереди животных в одно общее множество и возвращаем в виде списка
-        return animals.values().stream() // Получаем все очереди животных
-                .flatMap(Collection::stream) // Объединяем все очереди в один поток объектов Animal
-                .collect(Collectors.toList()); // Собираем поток в список и возвращаем
+        return animals.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     public boolean hasAnimalType(Class<? extends Animal> animalType) {
@@ -98,5 +97,8 @@ public class Location {
         return !plants.isEmpty();
     }
 
-
+    @Override
+    public String toString() {
+        return "Координаты:" + x + y;
+    }
 }
