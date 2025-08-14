@@ -31,13 +31,6 @@ public class Island {
         return width * height;
     }
 
-//    public static synchronized Island getIsland() {
-//        if (island == null) {
-//            island = new Island();
-//        }
-//        return island;
-//    }
-
     private void createLocations() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -99,6 +92,8 @@ public class Island {
                 .flatMap(location -> location.getPlants().stream())
                 .collect(Collectors.toList());
     }
+
+
 
 
 }

@@ -3,19 +3,17 @@ package com.island.model.services;
 import com.island.model.Island;
 import com.island.model.config.SimulationConfig;
 import com.island.model.entities.animals.Animal;
+import com.island.model.entities.animals.predators.Wolf;
 import com.island.model.locations.Location;
 import com.island.util.StatisticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Simulation {
-    private final StatisticsManager statsManager;
+    public final StatisticsManager statsManager;
 
     private final Island island;
 
@@ -27,53 +25,17 @@ public class Simulation {
 
     private final AtomicInteger dayCounter = new AtomicInteger(0);
 
-    private final AtomicInteger monthCounter = new AtomicInteger(0);
-
-    private final Map<Class<? extends Animal>, Long> birthRecords = new ConcurrentHashMap<>();
-    private final Map<Class<? extends Animal>, Long> deathRecords = new ConcurrentHashMap<>();
-    private final Map<Class<? extends Animal>, Long> previousPopulationStats = new ConcurrentHashMap<>();
-
-    public Map<Class<? extends Animal>, Long> getPreviousPopulationStats() {
-        return previousPopulationStats;
-    }
+    //private final AtomicInteger monthCounter = new AtomicInteger(0);
 
     public Simulation(Island island) {
         this.island = island;
         this.statsManager = new StatisticsManager(this);
     }
 
-
-    public void recordBirth(Animal animal) {
-        birthRecords.merge(animal.getClass(), 1L, Long::sum);
-    }
-
-    public void recordDeath(Animal animal) {
-        deathRecords.merge(animal.getClass(), 1L, Long::sum);
-    }
-
-    public void updatePopulationStats() {
-        previousPopulationStats.clear();
-        previousPopulationStats.putAll(getCurrentPopulationStats());
-        birthRecords.clear();
-        deathRecords.clear();
-    }
-
     public Island getIsland() {
         return island;
     }
 
-    private Map<Class<? extends Animal>, Long> getCurrentPopulationStats() {
-        return island.getAllAnimals().stream()
-                .collect(Collectors.groupingBy(
-                        Animal::getClass,
-                        Collectors.counting()
-                ));
-    }
-
-    // Геттеры
-    public Map<Class<? extends Animal>, Long> getBirthRecords() { return birthRecords; }
-    public Map<Class<? extends Animal>, Long> getDeathRecords() { return deathRecords; }
-    public Set<Class<? extends Animal>> getAnimalClasses() { return birthRecords.keySet(); }
 
     public void startSimulation() {
         if (isRunning) return;
@@ -87,11 +49,11 @@ public class Simulation {
     private void processDay() {
         //System.out.println("[DEBUG] Processing day... Animals count: " + island.getAllAnimals().size());
         int currentDay = dayCounter.incrementAndGet();
-        int totalPlants = 0;
+        //int totalPlants = 0;
         for (Location[] row : island.getLocations()) {
             for (Location location : row) {
                 location.growPlants();
-                totalPlants += location.getPlants().size();
+                //totalPlants += location.getPlants().size();
             }
         }
 
@@ -101,9 +63,24 @@ public class Simulation {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+//        Animal tracedAnimal = null;
+//
+//        if (tracedAnimal == null) {
+//            tracedAnimal = island.getAllAnimals().stream()
+//                    .filter(a -> a.getClass() == Wolf.class)
+//                    .findFirst()
+//                    .orElse(null);
+//        }
+//
+//        if (tracedAnimal != null) {
+//            System.out.printf("Трассировка %s: [%d,%d] сытость=%.1f%n",
+//                    tracedAnimal.getClass().getSimpleName(),
+//                    tracedAnimal.getLocation().getX(),
+//                    tracedAnimal.getLocation().getY(),
+//                    tracedAnimal.getCurrentSatiety());
+//        }
 
-        updatePopulationStats();
-        statsManager.printStatistics(currentDay);
+        statsManager.updateDailyStats(currentDay);
     }
 
     private List<Callable<Void>> getCallables() {
@@ -121,8 +98,10 @@ public class Simulation {
                             animal.reproduce();
                             animal.decreaseSatiety();
                             if (animal.getCurrentSatiety() <= 0) {
+                                statsManager.recordDeath(animal, StatisticsManager.DeathCause.STARVATION);
                                 animal.die();
                             }
+
 
 
                         }

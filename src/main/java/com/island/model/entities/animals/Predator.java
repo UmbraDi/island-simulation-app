@@ -1,6 +1,7 @@
 package com.island.model.entities.animals;
 
 import com.island.model.config.AnimalConfig;
+import com.island.util.StatisticsManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public abstract class Predator extends Animal {
         if (hasPrey()) {
             return 0.9;
         } else {
-            return 0.2;
+            return 0.4;
         }
     }
 
@@ -52,8 +53,10 @@ public abstract class Predator extends Animal {
         if (getProbability(diet.get(prey.getClass()))) {
             double nutrition = Math.min(prey.config.weight, config.satietyLimit - currentSatiety);
             currentSatiety += nutrition;
+            simulation.statsManager.recordDeath(prey, StatisticsManager.DeathCause.EATEN);
             prey.die();
         }
+        //System.out.println("Скушал " + prey.getClass());
 
     }
 }

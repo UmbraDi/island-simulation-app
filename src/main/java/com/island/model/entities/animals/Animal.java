@@ -13,13 +13,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public abstract class Animal extends Entity {
-    //public Island island;
     protected Location location;
     protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
     public final AnimalConfig config;
     protected double currentSatiety;
     protected Map<Class<? extends Animal>, Integer> diet;
     protected static Simulation simulation;
+    public Gender gender;
 
 
     public void setLocation(Location location) {
@@ -29,6 +29,7 @@ public abstract class Animal extends Entity {
     public Animal(AnimalConfig config) {
         this.config = config;
         this.currentSatiety = config.satietyLimit;
+        this.gender = Gender.getRandomGender();
     }
 
 
@@ -59,6 +60,7 @@ public abstract class Animal extends Entity {
         List<Location> neighbors = simulation.getIsland().getNeighbors(location);
         if (neighbors.isEmpty()) return false;
         Location target = neighbors.get(ThreadLocalRandom.current().nextInt(neighbors.size()));
+        decreaseSatiety();
         return performMove(target);
     };
 
@@ -90,12 +92,11 @@ public abstract class Animal extends Entity {
     }
 
     public void reproduce() {
-        if (getPartner() != null && getProbability(config.reproductionChance)) {
+        Animal partner = getPartner();
+        if (partner != null && getProbability(config.reproductionChance)) {
             Animal offspring = createOffspring();
-            System.out.println("Создание потомка");
             location.addAnimal(offspring);
-            simulation.recordBirth(offspring);
-            decreaseSatiety();
+            simulation.statsManager.recordBirth(offspring);
             decreaseSatiety();
         }
     };
@@ -104,7 +105,7 @@ public abstract class Animal extends Entity {
 
     protected Animal getPartner() {
         Set<Animal> possiblePartners = location.getAnimals().get(this.getClass()).stream()
-                .filter(animal -> config.gender != animal.config.gender)
+                .filter(animal -> gender != animal.gender)
                 .collect(Collectors.toSet());
             if (possiblePartners.isEmpty()) return null;
             int randomIndex = random.nextInt(possiblePartners.size());
@@ -121,7 +122,6 @@ public abstract class Animal extends Entity {
             if (location != null) {
                 location.removeAnimal(this);
             }
-            simulation.recordDeath(this);
         }
     }
 

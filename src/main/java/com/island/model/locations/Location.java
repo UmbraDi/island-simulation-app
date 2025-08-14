@@ -1,6 +1,5 @@
 package com.island.model.locations;
 
-import com.island.model.entities.Entity;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.plants.Plant;
 
@@ -32,10 +31,6 @@ public class Location {
         this.y = y;
         this.terrain = (ThreadLocalRandom.current().nextDouble() > 0.7) ? TerrainType.FOREST : TerrainType.FIELD;
         initializePlants();
-    }
-
-    public TerrainType getTerrain() {
-        return terrain;
     }
 
     private void initializePlants() {
@@ -89,6 +84,8 @@ public class Location {
                 .collect(Collectors.toList());
     }
 
+
+
     public boolean hasAnimalType(Class<? extends Animal> animalType) {
         return animals.entrySet().stream().anyMatch(animalType::isInstance);
     }
@@ -101,4 +98,6 @@ public class Location {
     public String toString() {
         return "Координаты:" + x + y;
     }
+
+    
 }

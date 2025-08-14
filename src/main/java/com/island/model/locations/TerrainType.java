@@ -1,8 +1,8 @@
 package com.island.model.locations;
 
 public enum TerrainType {
-    FIELD(0.4, 2),
-    FOREST(0.7, 3),
+    FIELD(0.4, 4),
+    FOREST(0.7, 7),
     RIVER(0.1, 1);
 
     private final double growthProbability;

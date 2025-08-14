@@ -3,7 +3,6 @@ package com.island.model.config;
 import com.island.model.entities.animals.Animal;
 import com.island.model.entities.animals.herbivores.*;
 import com.island.model.entities.animals.predators.*;
-import com.island.model.locations.Location;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -11,23 +10,23 @@ import java.util.function.Supplier;
 public enum AnimalConfig {
 
     //Хищники
-    WOLF(50, 30, 3, 8, 25, 50, 50, Wolf::new),
-    BOA(15, 30, 1, 3, 25, 50, 50, Boa::new),
-    BEAR(500, 5, 2, 80, 25, 50, 50, Bear::new),
-    EAGLE(6, 20, 3, 1, 25, 50, 50, Eagle::new),
-    FOX(8, 30, 2, 2, 25, 50, 50, Fox::new),
+    WOLF(50, 30, 3, 8, 25, 70, 70, Wolf::new),
+    BOA(15, 30, 1, 3, 25, 70, 70, Boa::new),
+    BEAR(500, 5, 2, 80, 25, 70, 70, Bear::new),
+    EAGLE(6, 20, 3, 1, 25, 70, 70, Eagle::new),
+    FOX(8, 30, 2, 2, 25, 70, 70, Fox::new),
 
     //Травоядные
-    BOAR(400, 50, 2, 50, 25, 50, 50, Boar::new),
-    BUFFALO(700, 10, 3, 100, 25, 50, 50, Buffalo::new),
-    CATERPILLAR(0.01, 1000, 0, 0, 25, 50, 50, Caterpillar::new),
-    DEER(300, 20, 4, 50, 25, 50, 50, Deer::new),
-    DUCK(1, 200, 4, 0.15, 25, 50, 50, Duck::new),
-    GOAT(60, 140, 3, 10, 25, 50, 50, Goat::new),
-    HORSE(400, 20, 4, 60, 25, 50, 50, Horse::new),
-    MOUSE(0.05, 500, 1, 0.01, 25, 50, 50, Mouse::new),
-    RABBIT(2, 150, 2, 0.45, 25, 50, 50, Rabbit::new),
-    SHEEP(70, 140, 3, 15, 25, 50, 50, Sheep::new);
+    BOAR(400, 50, 2, 50, 25, 50, 70, Boar::new),
+    BUFFALO(700, 10, 3, 100, 25, 50, 70, Buffalo::new),
+    CATERPILLAR(0.01, 1000, 0, 0, 25, 50, 70, Caterpillar::new),
+    DEER(300, 20, 4, 50, 25, 50, 70, Deer::new),
+    DUCK(1, 200, 4, 0.15, 25, 50, 70, Duck::new),
+    GOAT(60, 140, 3, 10, 25, 50, 70, Goat::new),
+    HORSE(400, 20, 4, 60, 25, 50, 70, Horse::new),
+    MOUSE(0.05, 500, 1, 0.01, 25, 50, 70, Mouse::new),
+    RABBIT(2, 150, 2, 0.45, 25, 50, 70, Rabbit::new),
+    SHEEP(70, 140, 3, 15, 25, 50, 70, Sheep::new);
 
     public final double weight;
 
@@ -48,17 +47,7 @@ public enum AnimalConfig {
 
     public final Supplier<Animal> factory;
 
-    public final Gender gender;
 
-    public enum Gender {
-        BABY,
-        MALE,
-        FEMALE;
-
-        public static Gender getRandomGender() {
-            return Math.random() > 0.5 ? MALE : FEMALE;
-        }
-    }
 
     AnimalConfig(double weight, int maxPerLocation, int maxSpeed, double satietyLimit,
                  int starvationRate, int hungerThreshold, double reproductionChance,
@@ -71,7 +60,6 @@ public enum AnimalConfig {
         this.hungerThreshold = hungerThreshold;
         this.reproductionChance = reproductionChance;
         this.factory = factory;
-        this.gender = Gender.getRandomGender();
     }
 
     public Animal createAnimal() {
@@ -99,21 +87,21 @@ public enum AnimalConfig {
     }
 
     public static final class StartingValue {
-        public static final int WOLF = 300;
-        public static final int BOA = 200;
-        public static final int FOX = 300;
-        public static final int BEAR = 50;
-        public static final int EAGLE = 1500;
-        public static final int HORSE = 200;
-        public static final int DEER = 200;
-        public static final int RABBIT = 1000;
-        public static final int MOUSE = 3000;
-        public static final int GOAT = 1000;
-        public static final int SHEEP = 1000;
-        public static final int BOAR = 400;
-        public static final int BUFFALO = 100;
-        public static final int DUCK = 1500;
-        public static final int CATERPILLAR = 5000;
+        public static final int WOLF = 30;
+        public static final int BOA = 20;
+        public static final int FOX = 30;
+        public static final int BEAR = 5;
+        public static final int EAGLE = 150;
+        public static final int HORSE = 20;
+        public static final int DEER = 20;
+        public static final int RABBIT = 300;
+        public static final int MOUSE = 500;
+        public static final int GOAT = 100;
+        public static final int SHEEP = 100;
+        public static final int BOAR = 40;
+        public static final int BUFFALO = 10;
+        public static final int DUCK = 150;
+        public static final int CATERPILLAR = 500;
     }
 
     public static final class EatingProfile {
